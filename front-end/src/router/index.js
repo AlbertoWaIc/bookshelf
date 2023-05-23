@@ -2,6 +2,8 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 //import HomeView from '../views/HomeView.vue'
 import LoginStart from '../components/Login.vue'
+import Timeline from '../components/Timeline.vue'
+import TimelineInbox from '../components/TimelineInbox.vue'
 
 Vue.use(VueRouter)
 
@@ -10,6 +12,16 @@ const routes = [
     path: '/',
     name: 'LoginStart',
     component: LoginStart
+  },
+  {
+    path: '/Timeline',
+    name: 'Timeline',
+    component: Timeline
+  },
+  {
+    path: '/TimelineInbox',
+    name: 'TimelineInbox',
+    component: TimelineInbox
   },
 //  {
 //    path: '/about',
