@@ -26,4 +26,5 @@ urlpatterns = [
     path('login/checkUserMail', login.check_user_mail, name='check_user_mail'),
     path('login/registerNewPassword', login.register_new_password, name='register_new_password'),
     path('book/searchBookByCamera', read_barcode.search_book_by_camera, name='search_book_by_camera'),
+    path('book/searchBookByKeyword', read_barcode.search_book_by_keyword, name='search_book_by_keyword'),
 ]

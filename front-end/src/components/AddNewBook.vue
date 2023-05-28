@@ -1,6 +1,6 @@
 <template>
   <v-container class="mt-4">
-    <v-row justify="center">
+    <v-row justify="center" align="center">
       <v-col cols="6">
         <v-text-field
           v-model="search"
@@ -9,6 +9,7 @@
           prepend-inner-icon="mdi-magnify"
           label="キーワード検索"
           ref="searchField"
+          @keyup.enter="executeSearch"
         ></v-text-field>
       </v-col>
     </v-row>
@@ -174,6 +175,24 @@ export default {
             console.log(e);
           }
         });
+    },
+    executeSearch() {
+      console.log(this.search);
+      if (this.search.length > 0) {
+        let param = {
+          keyword: this.search,
+        };
+        axios
+          .post("http://127.0.0.1:8000/book/searchBookByKeyword", param)
+          .then((res) => {
+            try {
+              let data = JSON.parse(JSON.stringify(res.data));
+              console.log(data);
+            } catch (e) {
+              console.log(e);
+            }
+          });
+      }
     },
   },
 };
