@@ -6,6 +6,7 @@ import LoginStart from '../components/Login.vue'
 import TimelineInbox from '../components/TimelineInbox.vue'
 import BookPocket from '../components/BookPocket.vue'
 import AddNewBook from '../components/AddNewBook.vue'
+import Wordcloud from '../components/Wordcloud.vue'
 // import Main from '../components/Main.vue'
 // import App from '../components/App.vue'
 
@@ -31,6 +32,11 @@ const routes = [
         path: '/add_new_book',
         name: 'AddNewBook',
         component: AddNewBook
+      },
+      {
+        path: '/wordcloud',
+        name: 'Wordcloud',
+        component: Wordcloud
       },
  // {
  //   path: '/about',

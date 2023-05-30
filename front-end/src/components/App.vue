@@ -1,47 +1,51 @@
 <template>
-    <v-app>
-      <v-app-bar
-          fixed
-        color="purple"
-        class="header"
-        max-height="64px"
-        height="64px"
-      >
-        <!-- ハンバーガーメニューアイコン -->
-        <v-app-bar-nav-icon
-          @click="drawer = true"
-        ></v-app-bar-nav-icon>
-          <v-icon class="ml-5 mr-2">{{ titleIcon }}</v-icon>
-          <v-toolbar-title>{{ title }}</v-toolbar-title>
-      </v-app-bar>
-      <v-navigation-drawer v-model="drawer"  class="drawer"
-        absolute bottom temporary app clipped>
-        <v-list>
-          <v-list-item-group
-            v-model="group"
-            clipped-left
-            active-class="deep-purple--text text--accent-4"
+  <v-app>
+    <v-app-bar
+      fixed
+      color="purple"
+      class="header"
+      max-height="64px"
+      height="64px"
+    >
+      <!-- ハンバーガーメニューアイコン -->
+      <v-app-bar-nav-icon @click="drawer = true"></v-app-bar-nav-icon>
+      <v-icon class="ml-5 mr-2">{{ titleIcon }}</v-icon>
+      <v-toolbar-title>{{ title }}</v-toolbar-title>
+    </v-app-bar>
+    <v-navigation-drawer
+      v-model="drawer"
+      class="drawer"
+      absolute
+      bottom
+      temporary
+      app
+      clipped
+    >
+      <v-list>
+        <v-list-item-group
+          v-model="group"
+          clipped-left
+          active-class="deep-purple--text text--accent-4"
+        >
+          <v-list-item
+            v-for="nav_list in nav_lists"
+            :key="nav_list.id"
+            @click="clickListItem(nav_list.id)"
           >
-            <v-list-item
-              v-for="nav_list in nav_lists"
-              :key="nav_list.id"
-              @click="clickListItem(nav_list.id)"
-            >
-              <v-list-item-icon>
-                <v-icon>{{ nav_list.icon }}</v-icon>
-              </v-list-item-icon>
-              <v-list-item-content>
-                <v-list-item-title>{{ nav_list.name }}</v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>
-          </v-list-item-group>
-        </v-list>
+            <v-list-item-icon>
+              <v-icon>{{ nav_list.icon }}</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>{{ nav_list.name }}</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+        </v-list-item-group>
+      </v-list>
     </v-navigation-drawer>
 
     <v-main class="pt-10">
-      <router-view/>
+      <router-view />
     </v-main>
-
   </v-app>
 </template>
 
@@ -85,28 +89,31 @@ export default {
   // },
   methods: {
     clickListItem(index) {
-      console.log(index)
-      console.log(this.navigationId)
+      console.log(index);
+      console.log(this.navigationId);
       if (this.navigationId !== index) {
         this.title = this.nav_lists[index].name;
         this.titleIcon = this.nav_lists[index].icon;
         this.navigationId = this.nav_lists[index].id;
         switch (index) {
           case 0:
-            this.$router.push({name: "TimelineInbox"});
+            this.$router.push({ name: "TimelineInbox" });
             break;
           case 1:
-            this.$router.push({name: "BookPocket"});
+            this.$router.push({ name: "BookPocket" });
             break;
           case 2:
-            this.$router.push({name: "AddNewBook"});
+            this.$router.push({ name: "AddNewBook" });
+            break;
+          case 3:
+            this.$router.push({ name: "Wordcloud" });
             break;
           case 5:
-            this.$router.push({name: "AddNewBook"});
+            this.$router.push({ name: "AddNewBook" });
             break;
           default:
-            console.log('Unknown page.');
-            this.$router.push({name: "Timeline"});
+            console.log("Unknown page.");
+            this.$router.push({ name: "Timeline" });
             break;
         }
       }
