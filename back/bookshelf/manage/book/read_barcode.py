@@ -121,6 +121,7 @@ def input_book_info_google_books(res):
         book_item_init.append(book_item)
     return book_item_init
 
+
 @csrf_exempt
 def search_book_by_keyword(requests):
     param = json.loads(requests.body)
@@ -137,7 +138,8 @@ def search_book_by_keyword(requests):
         if response.status_code == 200:
             data = response.json()
             book_items = input_book_info_google_books(data)
-            context["book_info"] = book_items
+            # print(book_items)
+            context["book_info"] = serialize_book_data_for_front_end(book_items)
         else:
             context["book_info"] = []
         context["success"] = 1
@@ -147,3 +149,14 @@ def search_book_by_keyword(requests):
         context["error"] = "見つかりませんでした。"
 
     return JsonResponse(context, safe=False)
+
+
+def serialize_book_data_for_front_end(book_items):
+    # バーコード検索、キーワード検索でkeyが統一されていなければここで統一してもいい
+    result_list = []
+    if book_items is None or len(book_items) < 1:
+        return result_list
+    for index, item in enumerate(book_items):
+        print(index)
+        print(item)
+    return book_items

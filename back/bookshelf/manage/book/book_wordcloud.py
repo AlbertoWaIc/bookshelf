@@ -60,18 +60,28 @@ def generate_wordcloud(words):
         else:
             word_freq[word] = 1
 
-    print(word_freq)
     # valueを数値でソートして取り出す
     sorted_items = sorted(word_freq.items(), key=lambda x: x[1], reverse=True)
     # ソートされた結果を表示
-    print(type(sorted_items))
-    context["word_rank"] = sorted_items
-
+    word_rank_list = create_word_rank_list(sorted_items)
+    context["word_rank"] = word_rank_list
     wordcloud = WordCloud(width=800, height=400, background_color='white', font_path=FONT_PATH).generate_from_frequencies(word_freq)
     # ワードクラウドを画像ファイルとして保存する
     wordcloud.to_file(IMAGE_PATH + "wordcloud.png")
     context["image_path"] = "wordcloud.png"
     return context
+
+
+def create_word_rank_list(sorted_items):
+    """
+    出現頻度順にソートされた単語をフロント側で表示するためにlistの中に辞書型で格納するための処理
+    :param sorｓted_items:
+    :return words_list:
+    """
+    words_list = []
+    for key, value in enumerate(sorted_items):
+        words_list.append({"word": value[0], "usedTimes": value[1]})
+    return words_list
 
 
 # テキストデータを形態素解析してワードクラウドを生成する
