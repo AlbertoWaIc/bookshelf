@@ -25,9 +25,11 @@ def search_book_by_camera(requests):
         }
         result = send_book_requests(endpoint, params, headers)
         res = result.json()
+        print(res)
         if res:
             book_items = input_book_info_open_db(book_item_init, res)
             context["book_info"] = book_items
+            print(context["book_info"])
 
         else:
             # 国立国会図書館サーチ(NDL Search)
@@ -67,29 +69,30 @@ def send_book_requests(endpoint, params, headers=None):
 
 
 def create_context():
-    return {
+    return [{
         "author": "",     # 著者
         "category": "",   # カテゴリ
         "isbn": "",       # ISBN
+        "pages": "",      # ページ数
         "pics": "",       # 画像
         "pub_date": "",   # 出版日
         "publisher": "",  # 出版社
         "reviewer": "",   # レビュアー
         "title": "",      # タイトル
         "text": "",       # テキスト
-    }
+    }]
 
 
 def input_book_info_open_db(book_item_init, res):
-    book_item_init["author"] = res[0]["summary"].get("author")
+    book_item_init[0]["author"] = res[0]["summary"].get("author")
     # context["category"] = res[0]["summary"].get("")
-    book_item_init["isbn"] = res[0]["summary"].get("isbn")
-    book_item_init["pics"] = res[0]["summary"].get("cover")
-    book_item_init["pub_date"] = res[0]["summary"].get("pubdate")
-    book_item_init["publisher"] = res[0]["summary"].get("publisher")
-    book_item_init["reviewer"] = res[0]["hanmoto"]["reviews"][0].get("reviewer")
-    book_item_init["title"] = res[0]["summary"].get("title")
-    book_item_init["text"] = res[0]["onix"]["CollateralDetail"]["TextContent"][0].get("Text")
+    book_item_init[0]["isbn"] = res[0]["summary"].get("isbn")
+    book_item_init[0]["pics"] = res[0]["summary"].get("cover")
+    book_item_init[0]["pub_date"] = res[0]["summary"].get("pubdate")
+    book_item_init[0]["publisher"] = res[0]["summary"].get("publisher")
+    # book_item_init[0]["reviewer"] = res[0]["hanmoto"]["reviews"][0].get("reviewer")
+    book_item_init[0]["title"] = res[0]["summary"].get("title")
+    book_item_init[0]["text"] = res[0]["onix"]["CollateralDetail"]["TextContent"][0].get("Text")
     return book_item_init
 
 

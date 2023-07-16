@@ -108,12 +108,16 @@ export default {
           case 3:
             this.$router.push({ name: "Wordcloud" });
             break;
+          case 4:
+            this.$router.push({ name: "Wordcloud" });
+            break;
           case 5:
             this.$router.push({ name: "AddNewBook" });
             break;
           default:
             console.log("Unknown page.");
-            this.$router.push({ name: "Timeline" });
+            // this.$router.push({ name: "Timeline" });
+            this.$router.push({ name: "BookPocket" });
             break;
         }
       }

@@ -1,17 +1,17 @@
 <template>
   <v-container class="mt-6">
     <v-row justify="center">
-      <v-col cols="8">
+      <v-col cols="6">
         <!-- ここのアイテムの表示や要素の取得はもっと綺麗にしたい -->
         <!-- v-selectの表示位置がおかしい -->
         <v-select
           v-model="selectedItem"
           :items="getKeys(items)"
-          label="ワードクラウドを作りたい項目"
+          label="ワードクラウドでまとめたい項目"
           outlined
         ></v-select>
       </v-col>
-      <v-col cols="2" class="text-center">
+      <v-col cols="2" class="text-center mt-2">
         <v-btn @click="generateWordCloud" color="primary"
           >ワードクラウドの作成</v-btn
         ></v-col

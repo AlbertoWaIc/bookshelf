@@ -13,8 +13,7 @@
         ></v-text-field>
       </v-col>
     </v-row>
-    <div>{{ barcodeData }}</div>
-    <v-row justify="center">
+    <v-row justify="center" class="mb-4">
       <v-col cols="3" class="text-center">
         <v-btn
           class="rounded-xl border-dashed"
@@ -38,12 +37,23 @@
         </v-btn>
       </v-col>
     </v-row>
+
     <div v-if="searchResults.length > 0">
       <v-row justify="center">
-        <v-col v-for="(item, i) in searchResults" :key="i" cols="9">
+        <v-col v-for="(item, i) in searchResults" :key="i" cols="6">
           <v-card color="#385F73" dark class="hover-card">
+            <!-- 追加登録ボタン -->
+            <v-btn
+              fab
+              small
+              class="card-button"
+              color="primary"
+              @click="addNewBookBtn(item)"
+            >
+              <v-icon>mdi-plus</v-icon>
+            </v-btn>
             <div class="d-flex flex-no-wrap">
-              <v-col cols="4" class="pa-3">
+              <v-col cols="4" class="pa-3 d-flex justify-center">
                 <v-avatar size="auto" tile>
                   <v-img
                     v-if="item.pics"
@@ -57,31 +67,30 @@
                   ></v-img>
                 </v-avatar>
               </v-col>
-
-              <v-col cols="4" class="pa-3">
-                <!-- <v-card-title class="text-h5">{{ item.title }}</v-card-title> -->
-                <div class="text-h5 md-3">{{ item.title }}</div>
-                <div>{{ "著者: " + item.author }}</div>
-                <div>{{ "出版日: " + item.pub_date }}</div>
-                <div>{{ "ジャンル: " + item.category }}</div>
-                <div>{{ "ページ数: " + item.pages }}</div>
-              </v-col>
-              <v-col cols="4" class="pa-3">
-                <div class="word-wrap normal pt-10">
-                  {{
-                    item.text.length > 270
-                      ? item.text.slice(0, 266) + "..."
-                      : item.text
-                  }}
-                </div>
+              <v-col cols="7" class="pa-3">
+                <div class="text-h5 md-3 pb-5">{{ item.title }}</div>
+                <v-row class="pb-3">
+                  <v-col cols="6">
+                    <div class="word-wrap normal pt-7">
+                      {{ "著者： " + item.author }}
+                    </div>
+                    <div>{{ "出版日： " + item.pub_date }}</div>
+                    <div>{{ "ジャンル： " + item.category }}</div>
+                    <div>{{ "ページ数： " + item.pages }}</div>
+                  </v-col>
+                  <v-col cols="6" class="pa-3">
+                    <div class="word-wrap normal pt-7">
+                      {{
+                        item.text.length > 100
+                          ? item.text.slice(0, 100) + "..."
+                          : item.text
+                      }}
+                    </div>
+                  </v-col>
+                </v-row>
               </v-col>
             </div>
           </v-card>
-          <v-card cols="1">{{ "text" }}</v-card>
-          <!-- 本棚への追加ボタンを設置したいが、デザインと設置位置が決まらない -->
-          <!-- <v-btn class="mx-2" fab dark color="indigo">
-            <v-icon dark> mdi-plus </v-icon>
-          </v-btn> -->
         </v-col>
       </v-row>
     </div>
@@ -100,6 +109,88 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+
+    <!-- 新規登録用ダイアログ -->
+    <v-dialog
+      v-model="addNewBookDialog"
+      max-width="700px"
+      style="overflow: hidden"
+      persistent
+    >
+      <v-card>
+        <v-toolbar class="mb-3" rounded dark color="purple">
+          この本を追加しますか？
+        </v-toolbar>
+        <v-card>
+          <v-row>
+            <v-col cols="5" class="d-flex justify-center">
+              <v-avatar size="auto" class="pa-5" tile>
+                <v-img
+                  v-if="addNewBookItem.pics"
+                  :src="addNewBookItem.pics"
+                  :style="{ 'max-width': '100%', 'max-height': '100%' }"
+                ></v-img>
+                <v-img
+                  v-else
+                  :src="require('../assets/logo.png')"
+                  :style="{ 'max-width': '100%', 'max-height': '100%' }"
+                ></v-img>
+              </v-avatar>
+            </v-col>
+            <v-col cols="6" class="pa-5">
+              <v-row>
+                <v-col>
+                  <div class="text-h5 md-3 pb-5">
+                    {{ addNewBookItem.title }}
+                  </div>
+                  <div>{{ "著者： " + addNewBookItem.author }}</div>
+                  <div>{{ "出版日： " + addNewBookItem.pub_date }}</div>
+                  <div>{{ "ジャンル： " + addNewBookItem.category }}</div>
+                  <div>{{ "ページ数： " + addNewBookItem.pages }}</div>
+
+                  <v-card-text
+                    class="word-wrap normal d-flex align-center pl-0"
+                  >
+                    <v-icon
+                      v-for="index in 5"
+                      :key="index"
+                      :class="[
+                        'mdi',
+                        index <= selectedStar
+                          ? 'mdi-star yellow--text'
+                          : 'mdi-star-outline',
+                      ]"
+                      @click="updateSelectedStar(index)"
+                    ></v-icon>
+                    <v-spacer></v-spacer>
+                  </v-card-text>
+                </v-col>
+              </v-row>
+            </v-col>
+          </v-row>
+        </v-card>
+        <v-card-actions class="justify-space-between">
+          <!-- <v-row class="justify-space-between"> -->
+          <v-col cols="auto" color="blue">
+            <v-btn text outlined @click="closeAddNewDialog">閉じる</v-btn>
+          </v-col>
+          <v-col cols="auto" color="blue">
+            <v-btn text outlined @click="addNewBook">登録</v-btn>
+          </v-col>
+          <!-- </v-row> -->
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <v-snackbar v-model="showSnackbar" rounded="pill" color="purple">
+      {{ snackbarText }}
+
+      <template v-slot:action="{ attrs }">
+        <v-btn color="white" text v-bind="attrs" @click="showSnackbar = false">
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
+      </template>
+    </v-snackbar>
   </v-container>
 </template>
 
@@ -117,43 +208,11 @@ export default {
       barcodeData: "", // バーコードのデータを保存するデータプロパティ
       isbn: "",
       searchResults: [],
-      // searchResults: [
-      //   {
-      //     color: "#385F73",
-      //     src: "https://cdn.vuetifyjs.com/images/cards/halcyon.png",
-      //     title: "Unlimited music now",
-      //     artist: "superfly",
-      //     text: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nihil repellendus distinctio similique",
-      //   },
-      //   {
-      //     color: "#1F7087",
-      //     src: "https://cdn.vuetifyjs.com/images/cards/foster.jpg",
-      //     title: "Supermodel",
-      //     artist: "Foster the People",
-      //     text: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nihil repellendus distinctio similique",
-      //   },
-      //   {
-      //     color: "#952175",
-      //     src: "https://cdn.vuetifyjs.com/images/cards/halcyon.png",
-      //     title: "Halcyon Days",
-      //     artist: "Ellie Goulding",
-      //     text: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nihil repellendus distinctio similique",
-      //   },
-      //   {
-      //     color: "#148954",
-      //     src: "https://cdn.vuetifyjs.com/images/cards/foster.jpg",
-      //     title: "Supermodel",
-      //     artist: "Foster the People",
-      //     text: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nihil repellendus distinctio similique",
-      //   },
-      //   {
-      //     color: "#909090",
-      //     src: "https://cdn.vuetifyjs.com/images/cards/halcyon.png",
-      //     title: "Halcyon Days",
-      //     artist: "Ellie Goulding",
-      //     text: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nihil repellendus distinctio similique",
-      //   },
-      // ],
+      addNewBookDialog: false,
+      addNewBookItem: [],
+      showSnackbar: false,
+      snackbarText: "",
+      selectedStar: 0,
     };
   },
   methods: {
@@ -256,6 +315,7 @@ export default {
           try {
             let data = JSON.parse(JSON.stringify(res.data));
             console.log(data);
+            this.searchResults = data.book_info;
           } catch (e) {
             console.log(e);
           }
@@ -272,6 +332,7 @@ export default {
           .then((res) => {
             try {
               let data = JSON.parse(JSON.stringify(res.data));
+              console.log(data);
               this.searchResults = data.book_info;
               // ローディング付けたい
             } catch (e) {
@@ -280,27 +341,30 @@ export default {
           });
       }
     },
+    addNewBookBtn(item) {
+      this.addNewBookDialog = true;
+      this.addNewBookItem = item;
+    },
+    closeAddNewDialog() {
+      this.addNewBookDialog = false;
+      this.addNewBookItem = [];
+      this.selectedStar = 0;
+    },
+    addNewBook() {
+      this.showSnackbar = true;
+      this.snackbarText = "登録しました";
+      this.addNewBookDialog = false;
+      this.addNewBookItem = [];
+      this.selectedStar = 0;
+    },
+    updateSelectedStar(index) {
+      this.selectedStar = index; // クリックされた星のインデックスを取得し、selectedStarに代入
+    },
   },
 };
 </script>
 
 <style scoped>
-.card-button {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 200px;
-  height: 200px;
-  border-radius: 8px;
-  background-color: #f0f0f0;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.card-button-content {
-  width: 100%;
-  height: 100%;
-  font-size: 24px;
-}
 .border-dashed {
   border: 2px dashed white;
 }
@@ -308,5 +372,12 @@ export default {
 .button-text {
   color: black;
   font-weight: bold;
+  font-size: 24px;
+}
+.card-button {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  z-index: 1;
 }
 </style>
