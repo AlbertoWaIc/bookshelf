@@ -64,19 +64,19 @@ export default {
       drawer: false,
       group: null,
       titleIcon: "mdi-square-rounded-badge-outline",
-      title: "タイムライン",
+      title: "本棚",
       navigationId: 0,
       nav_lists: [
-        {
-          id: 0,
-          name: "タイムライン",
-          icon: "mdi-square-rounded-badge-outline",
-        },
-        { id: 1, name: "本棚", icon: "mdi-bookshelf" },
-        { id: 2, name: "書籍登録", icon: "mdi-book-plus" },
-        { id: 3, name: "分析", icon: "mdi-google-analytics" },
-        { id: 4, name: "アカウント情報", icon: "mdi-view-dashboard" },
-        { id: 5, name: "設定", icon: "mdi-cog-outline" },
+        // {
+        //   id: 0,
+        //   name: "タイムライン",
+        //   icon: "mdi-square-rounded-badge-outline",
+        // },
+        { id: 0, name: "本棚", icon: "mdi-bookshelf" },
+        { id: 1, name: "書籍登録", icon: "mdi-book-plus" },
+        { id: 2, name: "分析", icon: "mdi-google-analytics" },
+        // { id: 3, name: "アカウント情報", icon: "mdi-view-dashboard" },
+        // { id: 4, name: "設定", icon: "mdi-cog-outline" },
       ],
     };
   },
@@ -85,40 +85,34 @@ export default {
       this.drawer = false;
     },
   },
-  // mounted() {
-  // },
   methods: {
     clickListItem(index) {
-      console.log(index);
-      console.log(this.navigationId);
       if (this.navigationId !== index) {
         this.title = this.nav_lists[index].name;
         this.titleIcon = this.nav_lists[index].icon;
         this.navigationId = this.nav_lists[index].id;
+        let targetRoute = null;
+
         switch (index) {
           case 0:
-            this.$router.push({ name: "TimelineInbox" });
+            targetRoute = { name: "BookPocket" };
             break;
           case 1:
-            this.$router.push({ name: "BookPocket" });
+            targetRoute = { name: "AddNewBook" };
             break;
           case 2:
-            this.$router.push({ name: "AddNewBook" });
-            break;
-          case 3:
-            this.$router.push({ name: "Wordcloud" });
-            break;
-          case 4:
-            this.$router.push({ name: "Wordcloud" });
-            break;
-          case 5:
-            this.$router.push({ name: "AddNewBook" });
+            targetRoute = { name: "Wordcloud" };
             break;
           default:
             console.log("Unknown page.");
-            // this.$router.push({ name: "Timeline" });
-            this.$router.push({ name: "BookPocket" });
+            targetRoute = { name: "BookPocket" };
             break;
+        }
+
+        if (targetRoute) {
+          if (this.$route.name !== targetRoute.name) {
+            this.$router.push(targetRoute);
+          }
         }
       }
     },

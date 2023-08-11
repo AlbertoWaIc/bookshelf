@@ -38,7 +38,7 @@
       </v-col>
     </v-row>
 
-    <div v-if="searchResults.length > 0">
+    <div v-if="searchResults && searchResults.length > 0">
       <v-row justify="center">
         <v-col v-for="(item, i) in searchResults" :key="i" cols="6">
           <v-card color="#385F73" dark class="hover-card">
@@ -113,7 +113,7 @@
     <!-- 新規登録用ダイアログ -->
     <v-dialog
       v-model="addNewBookDialog"
-      max-width="700px"
+      max-width="800px"
       style="overflow: hidden"
       persistent
     >
@@ -122,7 +122,7 @@
           この本を追加しますか？
         </v-toolbar>
         <v-card>
-          <v-row>
+          <v-row no-gutters justify="center">
             <v-col cols="5" class="d-flex justify-center">
               <v-avatar size="auto" class="pa-5" tile>
                 <v-img
@@ -168,16 +168,28 @@
               </v-row>
             </v-col>
           </v-row>
+          <v-row no-gutters justify="center">
+            <v-col cols="10" class="justify-center">
+              <v-textarea
+                v-model="userSummary"
+                filled
+                label="本の感想・メモ"
+                color="purple"
+                @blur="trimText"
+                counter="1000"
+                clearable
+                auto-grow
+              ></v-textarea>
+            </v-col>
+          </v-row>
         </v-card>
-        <v-card-actions class="justify-space-between">
-          <!-- <v-row class="justify-space-between"> -->
+        <v-card-actions class="justify-space-between mt-3">
           <v-col cols="auto" color="blue">
             <v-btn text outlined @click="closeAddNewDialog">閉じる</v-btn>
           </v-col>
           <v-col cols="auto" color="blue">
             <v-btn text outlined @click="addNewBook">登録</v-btn>
           </v-col>
-          <!-- </v-row> -->
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -213,6 +225,7 @@ export default {
       showSnackbar: false,
       snackbarText: "",
       selectedStar: 0,
+      userSummary: "",
     };
   },
   methods: {
@@ -346,19 +359,58 @@ export default {
       this.addNewBookItem = item;
     },
     closeAddNewDialog() {
-      this.addNewBookDialog = false;
-      this.addNewBookItem = [];
-      this.selectedStar = 0;
+      this.makeInitInfo();
     },
     addNewBook() {
       this.showSnackbar = true;
       this.snackbarText = "登録しました";
-      this.addNewBookDialog = false;
-      this.addNewBookItem = [];
-      this.selectedStar = 0;
+      // console.log(this.addNewBookItem);
+      this.addNewBookApi();
     },
     updateSelectedStar(index) {
       this.selectedStar = index; // クリックされた星のインデックスを取得し、selectedStarに代入
+    },
+    makeInitInfo() {
+      this.addNewBookDialog = false;
+      this.addNewBookItem = [];
+      this.selectedStar = 0;
+      this.userSummary = "";
+    },
+    trimText() {
+      if (this.userSummary && this.userSummary.length > 1000) {
+        this.userSummary = this.userSummary.slice(0, 1000);
+      }
+    },
+    addNewBookApi() {
+      if (this.addNewBookItem.length < 0) {
+        this.showSnackbar = true;
+        this.snackbarText = "登録できませんでした";
+        return;
+      }
+      let param = {
+        book_item: this.addNewBookItem,
+        user_review: this.selectedStar,
+        user_summary: this.userSummary,
+      };
+      axios
+        .post("http://127.0.0.1:8000/book/registerNewBook", param)
+        .then((res) => {
+          try {
+            let data = JSON.parse(JSON.stringify(res.data));
+            console.log(data);
+            if (data.error_msg.length > 0) {
+              this.snackbarText = data.error_msg;
+            } else {
+              this.snackbarText = "本棚に登録しました";
+            }
+            this.showSnackbar = true;
+            // ローディング付けたい
+          } catch (e) {
+            console.log(e);
+          } finally {
+            this.makeInitInfo();
+          }
+        });
     },
   },
 };

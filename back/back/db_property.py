@@ -5,6 +5,6 @@ DATABASES = {
         'USER': 'root',
         'PASSWORD': 'papaya',
         'HOST': 'localhost',
-        'PORT': '3306'
+        'PORT': 3306
     }
 }

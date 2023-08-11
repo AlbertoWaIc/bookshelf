@@ -141,7 +141,6 @@ def search_book_by_keyword(requests):
         if response.status_code == 200:
             data = response.json()
             book_items = input_book_info_google_books(data)
-            # print(book_items)
             context["book_info"] = serialize_book_data_for_front_end(book_items)
         else:
             context["book_info"] = []

@@ -3,7 +3,7 @@ import VueRouter from 'vue-router'
 // import HomeView from '../views/HomeView.vue'
 import LoginStart from '../components/Login.vue'
 // import Timeline from '../components/Timeline.vue'
-import TimelineInbox from '../components/TimelineInbox.vue'
+// import TimelineInbox from '../components/TimelineInbox.vue'
 import BookPocket from '../components/BookPocket.vue'
 import AddNewBook from '../components/AddNewBook.vue'
 import Wordcloud from '../components/Wordcloud.vue'
@@ -20,11 +20,11 @@ const routes = [
       },
       {
         path: '',
-        name: 'TimelineInbox',
-        component: TimelineInbox
+        name: 'BookPocket',
+        component: BookPocket
       },
       {
-        path: '/book_pocket',
+        path: 'BookPocket',
         name: 'BookPocket',
         component: BookPocket
       },
@@ -38,14 +38,7 @@ const routes = [
         name: 'Wordcloud',
         component: Wordcloud
       },
- // {
- //   path: '/about',
- //   name: 'about',
- //   // route level code-splitting
- //   // this generates a separate chunk (about.[hash].js) for this route
- //   // which is lazy-loaded when the route is visited.
- //   component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
- // }
+
 ]
 
 const router = new VueRouter({

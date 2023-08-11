@@ -1,16 +1,18 @@
 <template>
   <v-container class="mt-10">
+    <v-row justify="center">
+      <v-col style="font-size: 25px">{{
+        "本棚には" + items.length + "冊あります。"
+      }}</v-col>
+    </v-row>
     <!--  データがないときは「データを登録しよう！」みたいなイメージを表示させたい  -->
     <v-row>
       <v-col v-for="(item, i) in items" :key="i" cols="3">
         <v-card :color="item.color" class="hover-card white--text">
           <v-row class="text-center">
             <v-col cols="12" class="pa-3">
-              <v-avatar size="auto" tile>
-                <v-img
-                  :src="item.src"
-                  :style="{ 'max-width': '90%', 'max-height': '90%' }"
-                ></v-img>
+              <v-avatar size="100%" tile>
+                <v-img :src="item.src" class="max-img"></v-img>
               </v-avatar>
             </v-col>
           </v-row>
@@ -33,11 +35,15 @@
                         ? 'mdi mdi-star yellow--text'
                         : 'mdi mdi-star-outline'
                     "
+                    @click="updateSelectedStar(index, i)"
                   ></v-icon>
                 </template>
                 <v-spacer></v-spacer>
-                <v-btn icon>
+                <v-btn v-if="!item.editStar" icon @click="canEditStar(i)">
                   <v-icon class="white--text">mdi-pencil</v-icon>
+                </v-btn>
+                <v-btn v-else icon @click="canEditStar(i)">
+                  <v-icon class="white--text">mdi-check</v-icon>
                 </v-btn>
               </v-card-text>
             </v-col>
@@ -58,13 +64,13 @@
                   </div>
                   <div v-else>
                     <!-- 編集モードのコンテンツ -->
-                    <v-textarea v-model="editedText" counter>{{
+                    <v-textarea v-model="editedText" counter="1000">{{
                       item.summary
                     }}</v-textarea>
-                    <v-btn icon @click="saveEdit">
+                    <v-btn icon @click="saveEdit(i)">
                       <v-icon class="white--text">mdi-check</v-icon>
                     </v-btn>
-                    <v-btn icon @click="cancelEdit">
+                    <v-btn icon @click="cancelEdit(i)">
                       <v-icon class="white--text">mdi-close</v-icon>
                     </v-btn>
                   </div></v-expansion-panel-content
@@ -79,12 +85,15 @@
 </template>
 
 <script>
+import axios from "axios";
 export default {
   name: "BookPocket",
   data() {
     return {
       editMode: false,
       editedText: "",
+      tmpSummary: "",
+      tmpStar: 0,
       items: [
         {
           color: "#385F73",
@@ -97,6 +106,7 @@ export default {
             "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nihil repellendus distinctio similique",
           summary:
             "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nihil repellendus distinctio similique",
+          editStar: false,
         },
         {
           color: "#1F7087",
@@ -109,6 +119,7 @@ export default {
             "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nihil repellendus distinctio similique",
           summary:
             "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nihil repellendus distinctio similique",
+          editStar: false,
         },
         {
           color: "#952175",
@@ -121,6 +132,7 @@ export default {
             "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nihil repellendus distinctio similique",
           summary:
             "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nihil repellendus distinctio similique",
+          editStar: false,
         },
         {
           color: "#148954",
@@ -133,6 +145,7 @@ export default {
             "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nihil repellendus distinctio similique",
           summary:
             "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nihil repellendus distinctio similique",
+          editStar: false,
         },
         {
           color: "#909090",
@@ -145,6 +158,7 @@ export default {
             "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nihil repellendus distinctio similique",
           summary:
             "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nihil repellendus distinctio similique",
+          editStar: false,
         },
       ],
     };
@@ -158,19 +172,71 @@ export default {
   methods: {
     clickEditMode(summary) {
       this.editedText = summary;
+      this.tmpSummary = summary;
       this.editMode = true;
     },
-    saveEdit() {
-      // 編集内容を保存する処理を実装
-      // 例えば、this.editedText を保存するAPIリクエストなどを行う
-
-      // 編集モードを終了し、表示モードに切り替える
-      this.editMode = false;
-      // this.item.summary = this.editedText; // データの更新
+    saveEdit(index) {
+      // 入力文字数が1000文字以上の場合は切り上げる
+      if (this.editedText && this.editedText.length > 1000) {
+        this.editedText = this.editedText.slice(0, 1000);
+      }
+      this.items[index].summary = this.editedText;
+      let param = {
+        item: this.items[index],
+      };
+      axios
+        .post("http://127.0.0.1:8000/book/update_user_summary", param)
+        .then((res) => {
+          try {
+            let data = JSON.parse(JSON.stringify(res.data));
+            console.log(data);
+            // ローディング付けたい
+          } catch (e) {
+            console.log(e);
+            this.items[index].summary = this.tmpSummary;
+          } finally {
+            this.editMode = false;
+            this.makeInitInfo();
+          }
+        });
     },
-    cancelEdit() {
+    cancelEdit(index) {
       // 編集をキャンセルし、表示モードに切り替える
+      this.items[index].summary = this.tmpSummary;
       this.editMode = false;
+      this.makeInitInfo();
+    },
+    canEditStar(index) {
+      this.tmpStar = this.items[index].star;
+      this.items[index].editStar = !this.items[index].editStar;
+    },
+    updateSelectedStar(num, index) {
+      if (this.items[index].editStar) {
+        this.items[index].star = num; // クリックされた星のインデックスを取得し、selectedStarに代入
+      }
+      let param = {
+        item: this.items[index],
+      };
+      axios
+        .post("http://127.0.0.1:8000/book/update_user_summary", param)
+        .then((res) => {
+          try {
+            let data = JSON.parse(JSON.stringify(res.data));
+            console.log(data);
+            // ローディング付けたい
+          } catch (e) {
+            console.log(e);
+            this.items[index].star = this.tmpStar;
+          } finally {
+            this.editMode = false;
+            this.makeInitInfo();
+          }
+        });
+    },
+    makeInitInfo() {
+      this.editedText = "";
+      this.tmpSummary = "";
+      this.tmpStar = 0;
     },
   },
 };
@@ -196,5 +262,9 @@ export default {
   .transparent
   .v-expansion-panel__content {
   background-color: transparent !important;
+}
+.max-img {
+  max-width: 100%;
+  max-height: 100%;
 }
 </style>
