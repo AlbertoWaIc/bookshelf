@@ -8,7 +8,7 @@
     <!--  データがないときは「データを登録しよう！」みたいなイメージを表示させたい  -->
     <v-row>
       <v-col v-for="(item, i) in items" :key="i" cols="3">
-        <v-card :color="item.color" class="hover-card white--text">
+        <v-card color="blue" class="hover-card white--text">
           <v-row class="text-center">
             <v-col cols="12" class="pa-3">
               <v-avatar size="100%" tile>
@@ -39,12 +39,12 @@
                   ></v-icon>
                 </template>
                 <v-spacer></v-spacer>
-                <v-btn v-if="!item.editStar" icon @click="canEditStar(i)">
+                <!-- <v-btn v-if="!item.editStar" icon @click="canEditStar(i)">
                   <v-icon class="white--text">mdi-pencil</v-icon>
                 </v-btn>
                 <v-btn v-else icon @click="canEditStar(i)">
                   <v-icon class="white--text">mdi-check</v-icon>
-                </v-btn>
+                </v-btn> -->
               </v-card-text>
             </v-col>
           </v-row>
@@ -94,73 +94,74 @@ export default {
       editedText: "",
       tmpSummary: "",
       tmpStar: 0,
-      items: [
-        {
-          color: "#385F73",
-          src: "https://cdn.vuetifyjs.com/images/cards/halcyon.png",
-          title: "Unlimited music now",
-          author: "superfly",
-          category: "ggggfdvfdvfd",
-          star: 0,
-          wrap_up_text:
-            "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nihil repellendus distinctio similique",
-          summary:
-            "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nihil repellendus distinctio similique",
-          editStar: false,
-        },
-        {
-          color: "#1F7087",
-          src: "https://cdn.vuetifyjs.com/images/cards/foster.jpg",
-          title: "Supermodel",
-          author: "Foster the People",
-          category: "ggggfdvfdvfd",
-          star: 2,
-          wrap_up_text:
-            "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nihil repellendus distinctio similique",
-          summary:
-            "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nihil repellendus distinctio similique",
-          editStar: false,
-        },
-        {
-          color: "#952175",
-          src: "https://cdn.vuetifyjs.com/images/cards/halcyon.png",
-          title: "Halcyon Days",
-          author: "Ellie Goulding",
-          category: "ggggfdvfdvfd",
-          star: 3,
-          wrap_up_text:
-            "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nihil repellendus distinctio similique",
-          summary:
-            "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nihil repellendus distinctio similique",
-          editStar: false,
-        },
-        {
-          color: "#148954",
-          src: "https://cdn.vuetifyjs.com/images/cards/foster.jpg",
-          title: "Supermodel",
-          author: "Foster the People",
-          category: "ggggfdvfdvfd",
-          star: 4,
-          wrap_up_text:
-            "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nihil repellendus distinctio similique",
-          summary:
-            "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nihil repellendus distinctio similique",
-          editStar: false,
-        },
-        {
-          color: "#909090",
-          src: "https://cdn.vuetifyjs.com/images/cards/halcyon.png",
-          title: "Halcyon Days",
-          author: "Ellie Goulding",
-          category: "ggggfdvfdvfd",
-          star: 5,
-          wrap_up_text:
-            "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nihil repellendus distinctio similique",
-          summary:
-            "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nihil repellendus distinctio similique",
-          editStar: false,
-        },
-      ],
+      items: [],
+      // items: [
+      //   {
+      //     color: "#385F73",
+      //     src: "https://cdn.vuetifyjs.com/images/cards/halcyon.png",
+      //     title: "Unlimited music now",
+      //     author: "superfly",
+      //     category: "ggggfdvfdvfd",
+      //     star: 0,
+      //     wrap_up_text:
+      //       "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nihil repellendus distinctio similique",
+      //     summary:
+      //       "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nihil repellendus distinctio similique",
+      //     editStar: false,
+      //   },
+      //   {
+      //     color: "#1F7087",
+      //     src: "https://cdn.vuetifyjs.com/images/cards/foster.jpg",
+      //     title: "Supermodel",
+      //     author: "Foster the People",
+      //     category: "ggggfdvfdvfd",
+      //     star: 2,
+      //     wrap_up_text:
+      //       "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nihil repellendus distinctio similique",
+      //     summary:
+      //       "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nihil repellendus distinctio similique",
+      //     editStar: false,
+      //   },
+      //   {
+      //     color: "#952175",
+      //     src: "https://cdn.vuetifyjs.com/images/cards/halcyon.png",
+      //     title: "Halcyon Days",
+      //     author: "Ellie Goulding",
+      //     category: "ggggfdvfdvfd",
+      //     star: 3,
+      //     wrap_up_text:
+      //       "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nihil repellendus distinctio similique",
+      //     summary:
+      //       "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nihil repellendus distinctio similique",
+      //     editStar: false,
+      //   },
+      //   {
+      //     color: "#148954",
+      //     src: "https://cdn.vuetifyjs.com/images/cards/foster.jpg",
+      //     title: "Supermodel",
+      //     author: "Foster the People",
+      //     category: "ggggfdvfdvfd",
+      //     star: 4,
+      //     wrap_up_text:
+      //       "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nihil repellendus distinctio similique",
+      //     summary:
+      //       "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nihil repellendus distinctio similique",
+      //     editStar: false,
+      //   },
+      //   {
+      //     color: "#909090",
+      //     src: "https://cdn.vuetifyjs.com/images/cards/halcyon.png",
+      //     title: "Halcyon Days",
+      //     author: "Ellie Goulding",
+      //     category: "ggggfdvfdvfd",
+      //     star: 5,
+      //     wrap_up_text:
+      //       "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nihil repellendus distinctio similique",
+      //     summary:
+      //       "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nihil repellendus distinctio similique",
+      //     editStar: false,
+      //   },
+      // ],
     };
   },
   props: {
@@ -169,7 +170,25 @@ export default {
       default: 0,
     },
   },
+  mounted() {
+    this.getBookShelfData();
+  },
   methods: {
+    getBookShelfData() {
+      axios
+        .post("http://127.0.0.1:8000/book/get_bookShelf_data")
+        .then((res) => {
+          try {
+            let data = JSON.parse(JSON.stringify(res.data));
+            console.log(data);
+            this.items = data.res;
+            // ローディング付けたい
+          } catch (e) {
+            console.log(e);
+            // } finally {
+          }
+        });
+    },
     clickEditMode(summary) {
       this.editedText = summary;
       this.tmpSummary = summary;

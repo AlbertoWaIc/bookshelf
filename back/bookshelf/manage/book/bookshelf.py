@@ -6,6 +6,14 @@ from ...manage import utils
 
 
 @csrf_exempt
+def get_bookShelf_data(requests):
+    res = db_insert_information.select_bookshelf()
+    context = {}
+    context["res"] = res
+    return JsonResponse(context, safe=False)
+
+
+@csrf_exempt
 def register_new_book(requests):
     param = json.loads(requests.body)
     book_item = param.get('book_item', [])
