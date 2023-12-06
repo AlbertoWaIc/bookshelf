@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from bookshelf.manage.login import login
-from bookshelf.manage.book import read_barcode, book_wordcloud, bookshelf
+from bookshelf.manage.book import read_barcode, book_wordcloud, bookshelf, find_book_by_ai
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -30,4 +30,5 @@ urlpatterns = [
     path('book/createWordcloud', book_wordcloud.create_wordcloud, name='create_wordcloud'),
     path('book/registerNewBook', bookshelf.register_new_book, name='register_new_book'),
     path('book/get_bookShelf_data', bookshelf.get_bookShelf_data, name='get_bookShelf_data'),
+    path('book/askToGpt', find_book_by_ai.askToGpt, name='askToGpt'),
 ]

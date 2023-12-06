@@ -37,7 +37,7 @@ def register_new_book(requests):
 
 def check_book_info(book_item, user_review, user_summary):
     # テキストの文字数を確認
-    title = book_item.get("text", "")
+    title = book_item.get("title", "")
     title = utils.truncate_text_for_char(title)
     # 著者の情報をデータ成型
     author_list = book_item.get("author", "")

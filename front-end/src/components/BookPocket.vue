@@ -8,7 +8,7 @@
     <!--  データがないときは「データを登録しよう！」みたいなイメージを表示させたい  -->
     <v-row>
       <v-col v-for="(item, i) in items" :key="i" cols="3">
-        <v-card color="blue" class="hover-card white--text">
+        <v-card color="blue" class="hover-card white--text" size="70%">
           <v-row class="text-center">
             <v-col cols="12" class="pa-3">
               <v-avatar size="100%" tile>
@@ -18,9 +18,9 @@
           </v-row>
           <v-row>
             <v-col cols="12" class="pa-3">
-              <v-card-title class="text-h5">{{ item.title }}</v-card-title>
+              <v-card-title>{{ item.title }}</v-card-title>
               <v-card-subtitle>{{ item.author }}</v-card-subtitle>
-              <v-card-text>{{ item.category }}</v-card-text>
+              <!-- <v-card-text>{{ item.category }}</v-card-text> -->
               <v-card-text class="word-wrap normal">{{
                 item.wrap_up_text
               }}</v-card-text>
@@ -283,7 +283,7 @@ export default {
   background-color: transparent !important;
 }
 .max-img {
-  max-width: 100%;
+  max-width: auto;
   max-height: 100%;
 }
 </style>

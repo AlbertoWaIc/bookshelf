@@ -1,26 +1,19 @@
 <template>
   <v-app>
     <v-app-bar
-      fixed
-      color="purple"
-      class="header"
-      max-height="64px"
-      height="64px"
-    >
-      <!-- ハンバーガーメニューアイコン -->
-      <v-app-bar-nav-icon @click="drawer = true"></v-app-bar-nav-icon>
-      <v-icon class="ml-5 mr-2">{{ titleIcon }}</v-icon>
-      <v-toolbar-title>{{ title }}</v-toolbar-title>
-    </v-app-bar>
-    <v-navigation-drawer
-      v-model="drawer"
-      class="drawer"
+      color="deep-purple accent-4"
+      dark
       absolute
-      bottom
-      temporary
-      app
-      clipped
+      clipped-left
+      elevate-on-scroll
+      scroll-target="#scrolling-techniques-7"
     >
+      <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+      <span>書籍管理アプリ</span>
+      <!-- <v-toolbar-title>My files</v-toolbar-title> -->
+    </v-app-bar>
+
+    <v-navigation-drawer v-model="drawer" absolute bottom temporary>
       <v-list>
         <v-list-item-group
           v-model="group"
@@ -43,9 +36,17 @@
       </v-list>
     </v-navigation-drawer>
 
-    <v-main class="pt-10">
-      <router-view />
-    </v-main>
+    <v-sheet
+      id="scrolling-techniques-7"
+      class="overflow-y-auto"
+      max-height="900"
+    >
+      <v-container>
+        <v-main class="pt-10">
+          <router-view />
+        </v-main>
+      </v-container>
+    </v-sheet>
   </v-app>
 </template>
 
@@ -75,6 +76,7 @@ export default {
         { id: 0, name: "本棚", icon: "mdi-bookshelf" },
         { id: 1, name: "書籍登録", icon: "mdi-book-plus" },
         { id: 2, name: "分析", icon: "mdi-google-analytics" },
+        { id: 3, name: "書籍を探す", icon: "mdi-magnify" },
         // { id: 3, name: "アカウント情報", icon: "mdi-view-dashboard" },
         // { id: 4, name: "設定", icon: "mdi-cog-outline" },
       ],
@@ -102,6 +104,9 @@ export default {
             break;
           case 2:
             targetRoute = { name: "Wordcloud" };
+            break;
+          case 3:
+            targetRoute = { name: "FindNewBook" };
             break;
           default:
             console.log("Unknown page.");

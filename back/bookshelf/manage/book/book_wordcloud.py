@@ -4,12 +4,13 @@ from wordcloud import WordCloud
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
+from ..database import db_insert_information
 
 FONT_PATH = 'C:/Windows/Fonts/HGRGM.TTC'
 IMAGE_PATH = "C:\\Users\\vivi_\\PycharmProjects\\bookshelf\\front-end\\src\\assets\\img\\"
 
 # テキストデータを形態素解析して指定した品詞の単語のみを抽出する関数
-def analyze_text():
+def analyze_text(text_data):
     mecab = MeCab.Tagger( r' -Owakati -d "C:\\Program Files\\MeCab\\dic\\ipadic" -u "C:\\Program Files\\MeCab\\dic\\NEologd\\NEologd.20200910-u.dic"')  # 品詞情報を取得するためのMeCabの設定
     # テキストデータ
     # text = """
@@ -19,12 +20,13 @@ def analyze_text():
     # この落語は、日本の伝統的なエンターテイメントの一つであり、言葉遊びやトリックを楽しむことができます。聞き手を笑わせるための巧妙な話術や表現方法が駆使されており、聴衆を楽しませることが目的とされています。
     # 落語の世界にはさまざまな演目があり、それぞれに特徴や面白さがあります。「二八そば」もその一つであり、日本の伝統文化を体感することができる素晴らしいエンターテイメントです。
     # """
-    text = """
-        5月31日は、様々な歴史的な出来事が起きた日です。例えば、1902年のこの日、南アフリカ共和国がイギリスから独立し、独自の国家として誕生しました。また、1961年の5月31日には、南アフリカのアパルトヘイト政策に反対する国際的な運動である「アフリカ解放の日」が制定されました。
-        一方、1991年のこの日には、ソ連の大統領であったミハイル・ゴルバチョフがモスクワで開催された共和国間協定に署名し、ソビエト連邦が崩壊しました。この出来事は、冷戦終結と新たな時代の幕開けを象徴するものとなりました。
-        また、2005年の5月31日には、インドの首都デリーで最初の地下鉄路線が開通しました。これにより、デリー市内の交通機関が大幅に改善され、都市の発展に寄与しました。
-        5月31日は、南アフリカ共和国の独立、アフリカ解放の日、ソビエト連邦の崩壊、デリー地下鉄の開通など、多くの重要な出来事が起きた日として歴史に刻まれています。
-    """
+    # text = """
+    #     5月31日は、様々な歴史的な出来事が起きた日です。例えば、1902年のこの日、南アフリカ共和国がイギリスから独立し、独自の国家として誕生しました。また、1961年の5月31日には、南アフリカのアパルトヘイト政策に反対する国際的な運動である「アフリカ解放の日」が制定されました。
+    #     一方、1991年のこの日には、ソ連の大統領であったミハイル・ゴルバチョフがモスクワで開催された共和国間協定に署名し、ソビエト連邦が崩壊しました。この出来事は、冷戦終結と新たな時代の幕開けを象徴するものとなりました。
+    #     また、2005年の5月31日には、インドの首都デリーで最初の地下鉄路線が開通しました。これにより、デリー市内の交通機関が大幅に改善され、都市の発展に寄与しました。
+    #     5月31日は、南アフリカ共和国の独立、アフリカ解放の日、ソビエト連邦の崩壊、デリー地下鉄の開通など、多くの重要な出来事が起きた日として歴史に刻まれています。
+    # """
+    text = text_data
 #     text = """彼女は、キーボードの前に座り、眠りに落ちるまでコードを書き続けた。彼女の名前はエミリー。プログラミングの世界で生きる彼女は、数え切れないほどの夜更かしとカップ麺を食べながら、プロジェクトに没頭していた。
 #
 # ある日、彼女は会社の新しいプロジェクトに割り当てられた。それは、画期的なアプリケーションの開発だった。彼女は興奮し、即座に取り組み始めた。日々のミーティングやコードの書き込み、バグの修正に追われながらも、彼女は情熱を持ってプロジェクトに取り組んだ。
@@ -100,8 +102,13 @@ def create_word_rank_list(sorted_items):
 # テキストデータを形態素解析してワードクラウドを生成する
 @csrf_exempt
 def create_wordcloud(requests):
+    # タイトル: 0,
+    # 概要: 1,
+    # 著者: 2,
+    # 本の感想: 3,
     param = json.loads(requests.body)
     keyword = param.get('wordcloud_target', 0)
-    words = analyze_text()
+    text_data = db_insert_information.select_wordcloud_text(keyword)
+    words = analyze_text(text_data)
     context = generate_wordcloud(words)
     return JsonResponse(context, safe=False)

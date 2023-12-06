@@ -7,6 +7,7 @@ import LoginStart from '../components/Login.vue'
 import BookPocket from '../components/BookPocket.vue'
 import AddNewBook from '../components/AddNewBook.vue'
 import Wordcloud from '../components/Wordcloud.vue'
+import FindNewBook from '../components/FindNewBook.vue'
 // import Main from '../components/Main.vue'
 // import App from '../components/App.vue'
 
@@ -37,6 +38,11 @@ const routes = [
         path: '/wordcloud',
         name: 'Wordcloud',
         component: Wordcloud
+      },
+      {
+        path: '/findNewBook',
+        name: 'FindNewBook',
+        component: FindNewBook
       },
 
 ]
